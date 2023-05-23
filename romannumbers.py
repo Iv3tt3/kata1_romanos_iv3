@@ -78,5 +78,45 @@ def entero_a_romano(n_int):
 
     return resultado
 
+
+num_romanos = {
+    'I' : 1,
+    'V' : 5,
+    'X': 10,
+    "L" : 50,
+    "C": 100,
+    "D" : 500,
+    "M": 1000
+}
+
+def comprobar_excepciones(romano):
+    for simbolo in num_romanos:
+        if simbolo * 4 in romano:
+            raise RomanNumberError("No se admiten más de tres simbolos iguales")
+        elif simbolo in ('VLD') and simbolo * 2 in romano:
+            raise RomanNumberError("No se pueden repetir V, L o D")
+
+
+def Romano_a_Entero(letras):
+    valor_total = 0
+    ultimo_valor = 0
+
+    comprobar_excepciones(letras) #No hace falta devolver resultado. Si la cosa va bien no se queja y si se queja hemos lanzado una excepcion.
+
+    for numeral in reversed(letras):
+        valor_actual = num_romanos[numeral]
+        if valor_actual <= 5 and ultimo_valor >= 50:
+            raise RomanNumberError("Resta no permitida")
+        if valor_actual <= 10 and ultimo_valor >= 500:
+            raise RomanNumberError("Resta no permitida")
+        if valor_actual >= ultimo_valor:
+            valor_total += valor_actual
+        else: 
+            valor_total -= valor_actual
+        ultimo_valor = valor_actual
+    return valor_total
+
+
+
 if __name__ == "__main__": #Esto es para que solo ejecute el codigo que sigue cuando ejecutemos el programa desde romannumbers, pero en otros ficheros donde se importe no se va a ejecutar
     print(entero_a_romano(0))
