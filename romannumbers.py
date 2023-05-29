@@ -92,30 +92,48 @@ num_romanos = {
 def comprobar_excepciones(romano):
     for simbolo in num_romanos:
         if simbolo * 4 in romano:
+            #Arregla ejemplo 'XXXX'
             raise RomanNumberError("No se admiten más de tres simbolos iguales")
         elif simbolo in ('VLD') and simbolo * 2 in romano:
+            #Los simbolos VLD solo pueden salir 1 vez en la cadena
             raise RomanNumberError("No se pueden repetir V, L o D")
 
 
 def Romano_a_Entero(letras):
     valor_total = 0
     ultimo_valor = 0
+    valor_final = 0
+    #ultimo_simbolo = ""
 
     comprobar_excepciones(letras) #No hace falta devolver resultado. Si la cosa va bien no se queja y si se queja hemos lanzado una excepcion.
 
     for numeral in reversed(letras):
         valor_actual = num_romanos[numeral]
         if valor_actual <= 5 and ultimo_valor >= 50:
+            # Si es I V y el ultimo valor es L D C M
             raise RomanNumberError("Resta no permitida")
-        if valor_actual <= 10 and ultimo_valor >= 500:
+        if valor_actual <= 50 and ultimo_valor >= 500:
+            # Si es I V X L y el ultimo valor es D M
             raise RomanNumberError("Resta no permitida")
+        
+        if valor_final == valor_actual and ultimo_valor > valor_actual:
+            #Para solucionar IVIV
+            raise RomanNumberError("No permitidas dos restas seguidas")
+        if valor_actual < valor_final:
+            raise RomanNumberError("No ordenado en ascendente")
+            #Para solucionar VIX i IIX
+
         if valor_actual >= ultimo_valor:
             valor_total += valor_actual
-        else: 
+        elif numeral not in 'VLD': 
+            # VLD no pueden restar por lo que no pueden entrar en resta
             valor_total -= valor_actual
+        else:
+            raise RomanNumberError("Resta no permitida")
+        valor_final = ultimo_valor
         ultimo_valor = valor_actual
-    return valor_total
-
+        #ultimo_simbolo = numeral
+    return valor_total 
 
 
 if __name__ == "__main__": #Esto es para que solo ejecute el codigo que sigue cuando ejecutemos el programa desde romannumbers, pero en otros ficheros donde se importe no se va a ejecutar

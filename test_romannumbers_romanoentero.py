@@ -10,6 +10,9 @@ def test_4_es_IV():
 def test_9_es_IX():
     assert Romano_a_Entero('IX') == 9
 
+def test_40_es_XL():
+    assert Romano_a_Entero('XL') == 40
+
 def test_decenas():
     assert Romano_a_Entero("L") == 50
 
@@ -40,7 +43,28 @@ def test_restas_no_permitidas():
         Romano_a_Entero("XM")
     with pytest.raises(RomanNumberError):
         Romano_a_Entero("XD")
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("VX")
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("LM")
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("LC")
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("DM")
+    
+def test_no_repeticiones_restas():
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("IIX")
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("IVX")
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("IVIV")
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("IXIV")
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("IXIX")  
+    with pytest.raises(RomanNumberError):
+        Romano_a_Entero("VIX")   
 
-
-    #with pytest.raises(RomanNumberError):
-        #Romano_a_Entero("VX")
+def test_punyeteros():
+        Romano_a_Entero("MCMXCIX") == 1999 
